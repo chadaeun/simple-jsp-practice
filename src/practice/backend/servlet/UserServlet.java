@@ -1,17 +1,29 @@
 package practice.backend.servlet;
 
 import java.io.IOException;
+import java.sql.SQLException;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.mysql.cj.jdbc.exceptions.SQLError;
+
+import practice.backend.dao.UserDao;
 import practice.backend.dto.User;
 
 @WebServlet("/user")
 public class UserServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	private UserDao userDao;
+	
+	@Override
+	public void init() throws ServletException {
+		userDao = UserDao.getIntance();
+	}
        
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String action = request.getParameter("action");
@@ -19,13 +31,49 @@ public class UserServlet extends HttpServlet {
 		String path;
 		if ("signup".equals(action)) {
 			path = doSignUp(request, response);
-			response.sendRedirect(root + path);
+			request.getRequestDispatcher(path).forward(request, response);
+		} else if ("signin".equals(action)) {
+			path = doSignIn(request, response);
+			request.getRequestDispatcher(path).forward(request, response);
+		} else if ("signout".equals(action)) {
+			path = doSignOut(request, response);
+			response.sendRedirect(root + "/index.jsp");
 		} else {
 			response.sendRedirect(root + "/error/404.jsp");
 		}
 	}
 
+	private String doSignOut(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("Sign Out");
+		
+		request.getSession().invalidate();
+		return "/index.jsp";
+	}
+
+	private String doSignIn(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("Sign In");
+
+		String id = request.getParameter("id");
+		String password = request.getParameter("password");
+		
+		try {
+			User user = userDao.signIn(id, password);
+			if (user != null) {
+				request.getSession().setAttribute("user", user);				
+			} else {
+				request.setAttribute("msg", "Failed to Sign In: Please check your ID and password.");
+				request.setAttribute("msgClass", "alert-danger");				
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return "/error/500.jsp";
+		}
+		
+		return "/index.jsp";
+	}
+
 	private String doSignUp(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("Sign Up");
 		if (!request.getParameter("password").equals(request.getParameter("password-confirm"))) {
 			request.setAttribute("msg", "Failed to Sign Up: Password and confirm password are not matching.");
 			return "/index.jsp";
@@ -35,9 +83,17 @@ public class UserServlet extends HttpServlet {
 		user.setId(request.getParameter("id"));
 		user.setPassword(request.getParameter("password"));
 		
-//		TODO here
-		
-		return null;
+		try {
+			userDao.signUp(user);
+			request.setAttribute("msg", "Sign Up Succeeded!");
+			request.setAttribute("msgClass", "alert-success");
+			return "/index.jsp";
+		} catch (SQLException e) {
+			e.printStackTrace();
+			request.setAttribute("msg", "Failed to Sign Up: ID is duplicated.");
+			request.setAttribute("msgClass", "alert-danger");
+			return "/index.jsp";
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

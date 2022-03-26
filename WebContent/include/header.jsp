@@ -23,9 +23,17 @@
       <div class="container d-flex justify-content-between">
         <a href="${root }/index.jsp" class="navbar-brand fw-bold">Simple Board</a>
         <ul class="navbar-nav">
+        <c:if test="${ ! empty user }">
           <li class="nav-item">
-            <span class="nav-link fw-bold text-body"> Hello, User! </span>
+            <span class="nav-link fw-bold text-body"> Hello, ${ user.id }! </span>
           </li>
+          <li class="nav-item">
+            <a href="${root }/articles?action=myarticles" class="nav-link">My Articles</a>
+          </li>
+          <li class="nav-item"><a href="${root }/user?action=signout" class="nav-link">Sign Out</a></li>
+        
+        </c:if>
+        <c:if test="${ empty user }">
           <li class="nav-item">
             <a href="#" class="nav-link" data-bs-toggle="modal" data-bs-target="#signInModal"
               >Sign In</a
@@ -36,11 +44,12 @@
               >Sign Up</a
             >
           </li>
-          <li class="nav-item">
-            <a href="${root }/articles?action=myarticles" class="nav-link">My Articles</a>
-          </li>
-          <li class="nav-item"><a href="${root }/user?action=signout" class="nav-link">Sign Out</a></li>
+        </c:if>
         </ul>
       </div>
     </nav>
     <main class="container p-5">
+   	<c:if test="${ ! empty msg }">
+   		<div class="alert ${ msgClass }">${ msg }</div>
+   	</c:if>
+   	<section>

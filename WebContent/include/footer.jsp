@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    </section>
    </main>
     <footer class="bg-dark">
       <div class="container text-muted text-center p-5">
@@ -56,7 +57,7 @@
               </div>
               <div class="form-floating mb-3">
                 <input
-                  type="password-confirm"
+                  type="password"
                   class="form-control"
                   id="password-confirm"
                   name="password-confirm"
