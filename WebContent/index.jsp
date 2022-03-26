@@ -27,7 +27,11 @@
         <c:forEach items="${articles }" var="article">
           <tr>
             <td>${ article.no }</td>
-            <td>${ article.subject }</td>
+            <td>
+        <a href="${ root }/article?action=view&no=${ article.no }">
+            ${ article.subject }
+        </a>
+            </td>
             <td>${ article.userid }</td>
           </tr>
         </c:forEach>

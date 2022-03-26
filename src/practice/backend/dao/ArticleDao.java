@@ -30,7 +30,8 @@ public class ArticleDao {
 		try {
 			conn = dbUtil.getConnection();
 			String sql = "SELECT no, userid, subject, content \n";
-			sql += "FROM article";
+			sql += "FROM article \n";
+			sql += "ORDER BY no DESC";
 			pstmt = conn.prepareStatement(sql);
 			rs = pstmt.executeQuery();
 			
@@ -61,7 +62,8 @@ public class ArticleDao {
 			conn = dbUtil.getConnection();
 			String sql = "SELECT no, userid, subject, content \n";
 			sql += "FROM article \n";
-			sql += "WHERE userid = ?";
+			sql += "WHERE userid = ? \n";
+			sql += "ORDER BY no DESC";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, id);
 			rs = pstmt.executeQuery();
@@ -82,5 +84,107 @@ public class ArticleDao {
 			dbUtil.close(rs, pstmt, conn);
 		}
 		return list;
+	}
+	
+	public int insert(Article article) throws SQLException {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dbUtil.getConnection();
+			String sql = "INSERT INTO article \n";
+			sql += "(userid, subject, content) \n";
+			sql += "VALUES (?, ?, ?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, article.getUserid());
+			pstmt.setString(2, article.getSubject());
+			pstmt.setString(3, article.getContent());
+			pstmt.executeUpdate();
+			
+			pstmt.close();
+			sql = "SELECT MAX(no) FROM article";
+			pstmt = conn.prepareStatement(sql);
+			rs = pstmt.executeQuery();
+			rs.next();
+			return rs.getInt(1);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			dbUtil.close(rs, pstmt, conn);
+		}
+	}
+	
+	public Article view(int no) throws SQLException {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		Article article = null;
+		
+		try {
+			conn = dbUtil.getConnection();
+			String sql = "SELECT no, userid, subject, content \n";
+			sql += "FROM article \n";
+			sql += "WHERE no = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, no);
+			rs = pstmt.executeQuery();
+			rs.next();
+			article = new Article();
+			article.setNo(rs.getInt("no"));
+			article.setUserid(rs.getString("userid"));
+			article.setSubject(rs.getString("subject"));
+			article.setContent(rs.getString("content"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			dbUtil.close(rs, pstmt, conn);
+		}
+		return article;
+	}
+	public void delete(int no, String userid) throws SQLException {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		
+		try {
+			conn = dbUtil.getConnection();
+			String sql = "DELETE FROM article \n";
+			sql += "WHERE no = ? and userid = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, no);
+			pstmt.setString(2, userid);
+			pstmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			dbUtil.close(pstmt, conn);
+		}
+	}
+	public void update(Article article, String id) throws SQLException {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dbUtil.getConnection();
+			String sql = "UPDATE article \n";
+			sql += "SET subject = ?, content = ? \n";
+			sql += "WHERE no = ? and userid = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, article.getSubject());
+			pstmt.setString(2, article.getContent());
+			pstmt.setInt(3, article.getNo());
+			pstmt.setString(4, article.getUserid());
+			pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			dbUtil.close(rs, pstmt, conn);
+		}
 	}
 }
