@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="/include/header.jsp" %>
+<c:if test="${ articles eq null }">
+	<script>
+		location.href = "${root}/article?action=list";
+	</script>
+</c:if>
 <div class="row">
         <div class="col">
           <h1 class="mb-5">Articles</h1>
@@ -18,16 +23,20 @@
           </tr>
         </thead>
         <tbody>
+        <c:if test="${ ! empty articles }">
+        <c:forEach items="${articles }" var="article">
           <tr>
-            <td>2</td>
-            <td>여기 한국인 없나요?</td>
-            <td>ChaDaEun</td>
+            <td>${ article.no }</td>
+            <td>${ article.subject }</td>
+            <td>${ article.userid }</td>
           </tr>
-          <tr>
-            <td>1</td>
-            <td>Hello and Welcome!</td>
-            <td>Admin</td>
-          </tr>
+        </c:forEach>
+        </c:if>
+        <c:if test="${ empty articles }">
+			<tr>
+            <td colspan=3>No Article: Hit the 'Write' button above and write the first article!</td>
+          </tr>        
+        </c:if>
         </tbody>
         <tbody></tbody>
       </table>

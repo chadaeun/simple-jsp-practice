@@ -37,7 +37,7 @@ public class UserServlet extends HttpServlet {
 			request.getRequestDispatcher(path).forward(request, response);
 		} else if ("signout".equals(action)) {
 			path = doSignOut(request, response);
-			response.sendRedirect(root + "/index.jsp");
+			response.sendRedirect(root + "/article?action=list");
 		} else {
 			response.sendRedirect(root + "/error/404.jsp");
 		}
@@ -47,7 +47,7 @@ public class UserServlet extends HttpServlet {
 		System.out.println("Sign Out");
 		
 		request.getSession().invalidate();
-		return "/index.jsp";
+		return "/article?action=list";
 	}
 
 	private String doSignIn(HttpServletRequest request, HttpServletResponse response) {
@@ -69,14 +69,15 @@ public class UserServlet extends HttpServlet {
 			return "/error/500.jsp";
 		}
 		
-		return "/index.jsp";
+		return "/article?action=list";
 	}
 
 	private String doSignUp(HttpServletRequest request, HttpServletResponse response) {
 		System.out.println("Sign Up");
 		if (!request.getParameter("password").equals(request.getParameter("password-confirm"))) {
 			request.setAttribute("msg", "Failed to Sign Up: Password and confirm password are not matching.");
-			return "/index.jsp";
+			request.setAttribute("msgClass", "alert-danger");
+			return "/article?action=list";
 		}
 		
 		User user = new User();
@@ -87,12 +88,12 @@ public class UserServlet extends HttpServlet {
 			userDao.signUp(user);
 			request.setAttribute("msg", "Sign Up Succeeded!");
 			request.setAttribute("msgClass", "alert-success");
-			return "/index.jsp";
+			return "/article?action=list";
 		} catch (SQLException e) {
 			e.printStackTrace();
 			request.setAttribute("msg", "Failed to Sign Up: ID is duplicated.");
 			request.setAttribute("msgClass", "alert-danger");
-			return "/index.jsp";
+			return "/article?action=list";
 		}
 	}
 

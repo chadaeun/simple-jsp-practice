@@ -21,7 +21,7 @@
   <body>
     <nav class="nav-bar navbar-expand bg-light py-3">
       <div class="container d-flex justify-content-between">
-        <a href="${root }/index.jsp" class="navbar-brand fw-bold">Simple Board</a>
+        <a href="${root}/article?action=list" class="navbar-brand fw-bold">Simple Board</a>
         <ul class="navbar-nav">
         <c:if test="${ ! empty user }">
           <li class="nav-item">
