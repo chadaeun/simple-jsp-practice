@@ -5,6 +5,8 @@
 
 Mock up: https://ovenapp.io/view/T6j3sUehZNkI2NRnJJhRrR5R7UsHKCor/
 
+BootStrap 5.0
+
 ## Database
 
 MySQL 8.0.28
