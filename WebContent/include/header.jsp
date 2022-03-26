@@ -28,7 +28,7 @@
             <span class="nav-link fw-bold text-body"> Hello, ${ user.id }! </span>
           </li>
           <li class="nav-item">
-            <a href="${root }/articles?action=myarticles" class="nav-link">My Articles</a>
+            <a href="${root }/article?action=myarticles" class="nav-link">My Articles</a>
           </li>
           <li class="nav-item"><a href="${root }/user?action=signout" class="nav-link">Sign Out</a></li>
         

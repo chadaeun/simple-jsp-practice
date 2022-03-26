@@ -40,38 +40,54 @@
       </div>
     </nav>
     <main class="container p-5">
-      <!-- Contents Here -->
-      <div class="row">
-        <div class="col">
-          <h1 class="mb-5">Articles</h1>
-        </div>
-        <div class="col text-end">
-          <a href="article?action=mvwrite" class="btn btn-primary btn-lg">Write</a>
-        </div>
-      </div>
-      <table class="table table-hover text-center">
-        <thead>
-          <tr class="table-light">
-            <th>No.</th>
-            <th>Subject</th>
-            <th>Author</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>2</td>
-            <td>여기 한국인 없나요?</td>
-            <td>ChaDaEun</td>
-          </tr>
-          <tr>
-            <td>1</td>
-            <td>Hello and Welcome!</td>
-            <td>Admin</td>
-          </tr>
-        </tbody>
-        <tbody></tbody>
-      </table>
-      <!-- Contents end -->
+      <section>
+        <!-- Contents Here -->
+        <script>
+          function cancel() {
+            if (confirm("Are you sure to cancel?")) {
+              location.href = "/article?action=list";
+            }
+          }
+        </script>
+
+        <h1 class="mb-5">Write</h1>
+        <form action="article" method="post">
+          <input type="hidden" name="action" value="write" />
+          <div class="row mb-3">
+            <div class="col-md-1">
+              <label class="form-label fw-bold" for="subject">Subject</label>
+            </div>
+            <div class="col">
+              <input class="form-control" type="text" name="subject" id="subject" />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-1">
+              <label class="form-label fw-bold" for="content">Content</label>
+            </div>
+            <div class="col">
+              <textarea
+                class="form-control"
+                name="content"
+                id="content"
+                cols="30"
+                rows="10"
+              ></textarea>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end">
+            <input
+              id="btn-cancel"
+              class="btn btn-secondary mx-2"
+              type="button"
+              onclick="cancel();"
+              value="Cancel"
+            />
+            <input class="btn btn-primary mx-2" type="submit" value="Submit" />
+          </div>
+        </form>
+        <!-- Contents end -->
+      </section>
     </main>
     <footer class="bg-dark">
       <div class="container text-muted text-center p-5">

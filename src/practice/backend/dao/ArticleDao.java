@@ -51,4 +51,36 @@ public class ArticleDao {
 		}
 		return list;
 	}
+	public List<Article> myArticles(String id) throws SQLException {
+		List<Article> list = new ArrayList<Article>();
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		
+		try {
+			conn = dbUtil.getConnection();
+			String sql = "SELECT no, userid, subject, content \n";
+			sql += "FROM article \n";
+			sql += "WHERE userid = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, id);
+			rs = pstmt.executeQuery();
+			
+			while (rs.next()) {
+				Article article = new Article();
+				article.setNo(rs.getInt("no"));
+				article.setUserid(rs.getString("userid"));
+				article.setSubject(rs.getString("subject"));
+				article.setContent(rs.getString("content"));
+				
+				list.add(article);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw e;
+		} finally {
+			dbUtil.close(rs, pstmt, conn);
+		}
+		return list;
+	}
 }

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import practice.backend.dao.ArticleDao;
 import practice.backend.dto.Article;
+import practice.backend.dto.User;
 
 @WebServlet("/article")
 public class ArticleServlet extends HttpServlet {
@@ -32,9 +33,34 @@ public class ArticleServlet extends HttpServlet {
 		if ("list".equals(action)) {
 			path = doList(request, response);
 			request.getRequestDispatcher(path).forward(request, response);
+		} else if ("myarticles".equals(action)) {
+			path = doMyArticles(request, response);
+			request.getRequestDispatcher(path).forward(request, response);
+		} else if ("mvwrite".equals(action)) {
+			response.sendRedirect(root + "/article/write.jsp");
 		} else {
 			response.sendRedirect(root + "/error/404.jsp");
 		}
+	}
+
+	private String doMyArticles(HttpServletRequest request, HttpServletResponse response) {
+		User user = (User) request.getSession().getAttribute("user");
+		if (user == null) {
+			request.setAttribute("msg", "Restricted to Access My Articles: Please sign in to view your articles.");
+			request.setAttribute("msgClass", "alert-warning");
+			return "/article?action=list";
+		}
+		
+		try {
+			List<Article> list = articleDao.myArticles(user.getId());
+			request.setAttribute("articles", list);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			request.setAttribute("msg", "Failed to Load Articles");
+			request.setAttribute("msgClass", "article-danger");
+		}
+		
+		return "/myarticles.jsp";
 	}
 
 	private String doList(HttpServletRequest request, HttpServletResponse response) {
