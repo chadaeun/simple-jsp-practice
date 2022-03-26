@@ -5,7 +5,7 @@
 
 Mock up: https://ovenapp.io/view/T6j3sUehZNkI2NRnJJhRrR5R7UsHKCor/
 
-BootStrap 5.0
+BootStrap 5
 
 ## Database
 
